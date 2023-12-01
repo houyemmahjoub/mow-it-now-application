@@ -2,9 +2,10 @@ import re
 from typing import Optional, Tuple
 from entities.mower_entity import Mower
 from entities.lawn_entity import Lawn
+from tools.file_utils import file_exists, count_lines
 
 
-def valid_mower_position(pos, lawn_x, lawn_y) -> Tuple[bool, Optional[str]]:
+def valid_mower_position(pos, lawn_x_max, lawn_y_max) -> Tuple[bool, Optional[str]]:
     # Construction of the regex fot the orientation
     orientations = "|".join(["N", "S", "E", "W"])
     regex = r"^\d+ \d+ ({})$".format(orientations)
@@ -12,9 +13,9 @@ def valid_mower_position(pos, lawn_x, lawn_y) -> Tuple[bool, Optional[str]]:
         coordinates = pos.split()
         x = int(coordinates[0])
         y = int(coordinates[1])
-        if x > lawn_x or y > lawn_y:
+        if x > lawn_x_max or y > lawn_y_max:
             return False, (f"Invalid position {pos}: The initial position ({x},{y}) of the mower should be inside "
-                           f"the lawn ({lawn_x},{lawn_y}).")
+                           f"the lawn ({lawn_x_max},{lawn_y_max}).")
         else:
             return True, "Valid position."
     else:
@@ -42,13 +43,13 @@ def valid_lawn_coordinates(coordinates) -> Tuple[bool, Optional[str]]:
         else:
             return False, f"Invalid lawn coordinates {coordinates}: It must be in the form of 2 numbers."
 
-
-def process_mowing(file_path):
+def process_instructions_file(file_path):
     with open(file_path, 'r') as file:
         first_line = file.readline().strip()  # Read first line
         valid_lawn, message_lawn = valid_lawn_coordinates(first_line)
         if valid_lawn:
-            lawn = Lawn(int(first_line.split()[0]), int(first_line.split()[1]))
+            first_line_split = first_line.split()
+            lawn = Lawn(int(first_line_split[0]), int(first_line_split[1]))
         else:
             raise Exception(message_lawn)
 
@@ -61,7 +62,7 @@ def process_mowing(file_path):
                 break
             valid_mower, message_mower = valid_mower_position(line1, lawn.x_max, lawn.y_max)
             if valid_mower:
-                line1_split = line1.split(" ")
+                line1_split = line1.split()
                 mower = Mower(int(line1_split[0]), int(line1_split[1]), line1_split[2], lawn)
             else:
                 raise Exception(message_mower)
@@ -77,3 +78,14 @@ def process_mowing(file_path):
                 print(str(mower))
             else:
                 raise Exception(message_inst)
+
+def process_mowing(file_path):
+    if file_exists(file_path):
+        if count_lines(file_path) >= 3:
+            process_instructions_file(file_path)
+        else:
+            raise Exception(f"Invalid file. The file must contain at least 3 lines.")
+    else:
+        raise Exception(f"File not found: {file_path}.")
+
+

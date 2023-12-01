@@ -1,9 +1,29 @@
+import os
 from unittest import TestCase
 
-from tools.mower_utils import valid_lawn_coordinates, valid_instructions, valid_mower_position
+from tools.mower_utils import valid_lawn_coordinates, valid_instructions, valid_mower_position, process_mowing, process_instructions_file
 
 
 class TestMowerUtils(TestCase):
+
+    def setUp(self):
+        # Prepare files for testing
+        self.empty_file = "empty_file.txt"
+        self.invalid_file = "invalid_file.txt"
+        open(self.empty_file, 'w').close()
+        data = ["5 5", "1 2 N", "GAGAGAGAA", "3 3 E"]
+        with open(self.invalid_file, 'w') as file:
+            for line in data:
+                file.write(line + '\n')
+
+    def tearDown(self):
+        # Clean after tests
+        try:
+            os.remove(self.empty_file)
+            os.remove(self.invalid_file)
+        except OSError:
+            pass
+
     def test_lawn_coordinates_returns_false_when_empty_value(self):
         valid, message = valid_lawn_coordinates("")
         self.assertFalse(valid)
@@ -109,3 +129,15 @@ class TestMowerUtils(TestCase):
     def test_valid_instructions_returns_true_when_valid_value2(self):
         valid = valid_instructions("GAGAGAGAA")
         self.assertTrue(valid)
+
+    def test_process_mowing_throws_exception_when_no_file(self):
+        with self.assertRaisesRegex(Exception, "File not found: test_file.txt."):
+            process_mowing("test_file.txt")
+
+    def test_process_mowing_throws_exception_when_empty_file(self):
+        with self.assertRaisesRegex(Exception, "Invalid file. The file must contain at least 3 lines."):
+            process_mowing("empty_file.txt")
+
+    def test_process_mowing_throws_exception_when_mower_without_instructions(self):
+        with self.assertRaisesRegex(Exception, "There is no instructions for Mower in position 3 3 E."):
+            process_instructions_file("invalid_file.txt")

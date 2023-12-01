@@ -1,6 +1,7 @@
 from unittest import TestCase
 import os
-from tools.file_utils import file_exists
+from tools.file_utils import file_exists, count_lines
+
 
 class TestFileUtils(TestCase):
     def setUp(self):
@@ -21,3 +22,6 @@ class TestFileUtils(TestCase):
 
     def test_file_exists_false_for_nonexistent_file(self):
         self.assertFalse(file_exists("nonexistent.txt"))
+
+    def test_count_lines_returns_1_when_one_line(self):
+        self.assertEqual(count_lines(self.existing_file), 1)
