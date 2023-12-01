@@ -17,9 +17,9 @@ This command will execute the application using the instructions provided in the
 ## Instructions Format
 The instructions.txt file should be formatted as follows:
 
-The first line should contain the coordinates of the top-right corner of the lawn, assuming the bottom-left corner is at (0,0).
-The following lines should contain instructions for each mower deployed. Each mower has two lines associated with it:
-The first line provides the mower's initial position and orientation (format: X Y O, where X and Y are integers, and O a letter indicating the orientation according to English cardinal notation (N,E,W,S).
-The second line contains a series of instructions telling the mower how to explore the lawn (A for move forward, D for turn right, and G for turn left).
+* The first line should contain the coordinates of the top-right corner of the lawn, assuming the bottom-left corner is at (0,0).
+* The following lines should contain instructions for each mower deployed. Each mower has two lines associated with it:
+1. The first line provides the mower's initial position and orientation (format: X Y O, where X and Y are integers, and O a letter indicating the orientation according to English cardinal notation (N,E,W,S).
+2. The second line contains a series of instructions telling the mower how to explore the lawn (A for move forward, D for turn right, and G for turn left).
 ## Testing
 To test the application with your input data, you can modify the instructions.txt file or create a new file with the desired instructions. Run the application with the command mentioned above.
