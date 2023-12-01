@@ -7,7 +7,7 @@ class Mower:
         self.lawn = lawn
 
     def __str__(self):
-        return f"Mower Position: ({self.x}, {self.y}, {self.orientation})"
+        return f"{self.x} {self.y} {self.orientation}"
 
     def move(self, instructions: str):
         for command in instructions:

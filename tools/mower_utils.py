@@ -74,6 +74,6 @@ def process_mowing(file_path):
             valid_inst, message_inst = valid_instructions(line2)
             if valid_inst:
                 mower.move(line2)
-                print(f"{mower.x} {mower.y} {mower.orientation}")
+                print(str(mower))
             else:
                 raise Exception(message_inst)
